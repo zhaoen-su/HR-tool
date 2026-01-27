@@ -59,5 +59,5 @@ Script ID: `1Cl76Q9iEOPD__I3mGTnQs2jrwWqnNCaI9BiZs0b6SDkmFtPHYOdf9v5x`
 
 - `clasp pull`: 從 Google 拉取最新程式碼
 - `clasp push`: 上傳本地修改到 Google
-- `clasp open`: 在瀏覽器開啟專案
+- `clasp open-script`: 在瀏覽器開啟專案
 - `clasp deploy`: 部署腳本版本
