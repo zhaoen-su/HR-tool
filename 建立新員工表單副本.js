@@ -1,5 +1,5 @@
 // 請在此填入您的範本試算表 ID
-const TEMPLATE_ID = "1Cl76Q9iEOPD__I3mGTnQs2jrwWqnNCaI9BiZs0b6SDkmFtPHYOdf9v5x";
+const TEMPLATE_ID = "I3mGTnQs2jrwWqnNCaI9BiZs0b6SDkmFtPHYOdf9v5x";
 
 function createNewSpreadsheet() {
     try {
