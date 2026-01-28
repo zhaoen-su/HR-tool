@@ -14,6 +14,20 @@ function createNewSpreadsheet() {
         const templateFile = DriveApp.getFileById(TEMPLATE_ID);
         const newFile = templateFile.makeCopy(newFileName);
 
+        const newFileId = newFile.getId();
+        const newSS = SpreadsheetApp.openById(newFileId); // 打開新複製出來的那份表
+        const allSheets = newSS.getSheets();
+        const keepSheetName = "資料"; // 👈 請修改這裡
+
+        allSheets.forEach(s => {
+            if (s.getName() !== keepSheetName) {
+                // 如果分頁名稱不是要保留的，就刪除
+                // 注意：試算表至少必須保留一個分頁，否則會報錯
+                if (newSS.getSheets().length > 1) {
+                    newSS.deleteSheet(s);
+                }
+            }
+        });
         // 4. (選用) 如果需要將新檔案放到特定資料夾，可以在這裡實作
         // const folder = DriveApp.getFolderById("TARGET_FOLDER_ID");
         // newFile.moveTo(folder);
