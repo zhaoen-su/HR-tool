@@ -1,7 +1,7 @@
-// 請在此填入您的範本試算表 ID
-const TEMPLATE_ID = "1-I3pxesO-aXYxTjzXOSXVoaeINE36RfNjzOr7MKYzyc";
-const TARGET_FOLDER_ID = "1yEf9uy3K0_7BBEOWdpBOZAr80Kz7R3gx";
 function createNewSpreadsheet() {
+    const TEMPLATE_ID = "1-I3pxesO-aXYxTjzXOSXVoaeINE36RfNjzOr7MKYzyc";
+    const TARGET_FOLDER_ID = "1yEf9uy3K0_7BBEOWdpBOZAr80Kz7R3gx";
+    
     try {
         // 2. 準備新檔名
         const ss = SpreadsheetApp.getActiveSpreadsheet();   
