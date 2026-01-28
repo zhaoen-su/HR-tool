@@ -8,7 +8,7 @@ function createNewSpreadsheet() {
         const sheet = ss.getActiveSheet();
         const employeeName = sheet.getRange("B2").getValue(); // 假設姓名在 B2 儲存格
         const startDate = Utilities.formatDate(sheet.getRange("B6").getValue(), "GMT+8", "yyyy-MM-dd");
-        const newFileName = employeeName + "_" + startDate;
+        const newFileName = employeeName + "-" + startDate;
 
         // 3. 取得範本檔案並建立副本
         const templateFile = DriveApp.getFileById(TEMPLATE_ID);
