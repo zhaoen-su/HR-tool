@@ -7,7 +7,7 @@ function createNewSpreadsheet() {
         const ss = SpreadsheetApp.getActiveSpreadsheet();   
         const sheet = ss.getActiveSheet();
         const employeeName = sheet.getRange("B2").getValue(); // 假設姓名在 B2 儲存格
-        const startDate = sheet.getRange("B6").getValue(); // 假設就職日期在 B3 儲存格
+        const startDate = (rawDate instanceof Date) ? Utilities.formatDate(rawDate, "GMT+8", "yyyy-MM-dd") : rawDate;
         const newFileName = employeeName + "_" + startDate;
 
         // 3. 取得範本檔案並建立副本
