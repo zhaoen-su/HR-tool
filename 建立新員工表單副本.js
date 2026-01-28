@@ -1,10 +1,28 @@
+// 請在此填入您的範本試算表 ID
+const TEMPLATE_ID = "1-I3pxesO-aXYxTjzXOSXVoaeINE36RfNjzOr7MKYzyc";
+
 function createNewSpreadsheet() {
-  try {
-    // 1. 建立新的試算表檔案
-    const timestamp = Utilities.formatDate(new Date(), "GMT+8", "yyyy-MM-dd HH:mm");
-    const newSS = SpreadsheetApp.create("測試" + timestamp);
-    const sheet = newSS.getSheets()[0]; // 取得第一個分頁
-  } catch (e) {
-    console.error("建立失敗: " + e.toString());
-  }
+    try {
+        // 2. 準備新檔名
+        const ss = SpreadsheetApp.getActiveSpreadsheet();   
+        const sheet = ss.getActiveSheet();
+        const employeeName = sheet.getRange("B2").getValue(); // 假設姓名在 B2 儲存格
+        const startDate = sheet.getRange("B6").getValue(); // 假設就職日期在 B3 儲存格
+        const newFileName = employeeName + "_" + startDate;
+
+        // 3. 取得範本檔案並建立副本
+        const templateFile = DriveApp.getFileById(TEMPLATE_ID);
+        const newFile = templateFile.makeCopy(newFileName);
+
+        // 4. (選用) 如果需要將新檔案放到特定資料夾，可以在這裡實作
+        // const folder = DriveApp.getFolderById("TARGET_FOLDER_ID");
+        // newFile.moveTo(folder);
+
+        console.log("建立副本成功: " + newFile.getUrl());
+        return newFile.getUrl();
+
+    } catch (e) {
+        console.error("建立失敗: " + e.toString());
+        SpreadsheetApp.getUi().alert("建立失敗: " + e.toString()); // 顯示錯誤給使用者
+    }
 }
