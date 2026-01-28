@@ -15,6 +15,7 @@ function createNewSpreadsheet() {
         const newFile = templateFile.makeCopy(newFileName);
 
         const newFileId = newFile.getId();
+        const newUrl = newFile.getUrl();
         const newSS = SpreadsheetApp.openById(newFileId);
         const allSheets = newSS.getSheets();
         const keepSheetName = "資料";
