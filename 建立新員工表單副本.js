@@ -32,8 +32,24 @@ function createNewSpreadsheet() {
         const folder = DriveApp.getFolderById(TARGET_FOLDER_ID);
         newFile.moveTo(folder);
 
-        console.log("建立副本成功: " + newFile.getUrl());
-        return newFile.getUrl();
+        const htmlOutput = HtmlService.createHtmlOutput(
+            `<div style="font-family: sans-serif; text-align: center; padding: 20px;">
+                <p style="font-size: 16px;">${newFileName}&nbsp;建立成功！</p>
+                <br>
+                <a href="${newUrl}" target="_blank" 
+                    style="background-color: #4285f4; color: white; padding: 10px 20px; 
+                        text-decoration: none; border-radius: 4px; font-weight: bold;">
+                    前往新試算表
+                </a>
+                <br><br>
+                <p style="color: gray; font-size: 12px;">點擊按鈕將於新分頁開啟</p>
+            </div>`
+        )
+        .setWidth(350)
+        .setHeight(220);
+
+        // 彈出視窗
+        SpreadsheetApp.getUi().showModalDialog(htmlOutput, "系統訊息");
 
     } catch (e) {
         console.error("建立失敗: " + e.toString());
