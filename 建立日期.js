@@ -71,7 +71,7 @@ function generateDate() {
   // 1. 先抓取一次假日資料 (轉為 Set)
   const holidaySet = getTwNationalHolidays();
 
-  const intervals = [7, 30, 49, 56, 90, 150, 180, 365];
+  const intervals = [7, 30, 49, 56, 90, 90, 150, 180, 365];
 
   // 3. 跑迴圈計算每一個日期，並直接包成 [[date1], [date2]] 的格式
   const results = intervals.map(days => {
