@@ -1,89 +1,88 @@
 // 設定常用變數
-const ss = SpreadsheetApp.getActiveSpreadsheet();   
+const ss = SpreadsheetApp.getActiveSpreadsheet();
 const sheet = ss.getActiveSheet();
 const baseDate = sheet.getRange("B6").getValue();
 
-// 算出兩年內的所有國定假日
-const holidayCal = CalendarApp.getCalendarById("zh-tw.taiwan#holiday@group.v.calendar.google.com");
-const startTime = new Date();
-const endTime = new Date(); 
-endTime.setFullYear(startTime.getFullYear() + 2);
+/**
+ * 取得未來兩年內的國定假日 (回傳 Set 格式以提升查詢效能)
+ */
+function getTwNationalHolidays() {
+  const calendar = CalendarApp.getCalendarById("zh-tw.taiwan#holiday@group.v.calendar.google.com");
+  const startTime = new Date();
+  const endTime = new Date();
+  endTime.setFullYear(startTime.getFullYear() + 2);
 
-const twHolidays = holidayCal.getEvents(startTime, endTime);
+  const events = calendar.getEvents(startTime, endTime);
 
-function calculateMeetingDate() {
-  const baseDate = new Date(sheet.getRange("B6").getValue());
-  const finalDate = getFinalMeetingDate(baseDate);
-  
-  // 假設要把結果寫在 B7
-  sheet.getRange("B7").setValue(finalDate);
-  Logger.log("最終開會日：" + finalDate);
+  // 將日期轉為 "yyyy-MM-dd" 字串並存入 Set，查詢速度 O(1)
+  const twNationalHolidays = new Set(
+    events.map(event => Utilities.formatDate(event.getStartTime(), "GMT+8", "yyyy-MM-dd"))
+  );
+
+  return twNationalHolidays;
 }
 
 /**
- * 核心邏輯：調整日期
+ * 核心邏輯：計算日期 (避開週末與國定假日)
  */
-function getFinalMeetingDate(date) {
+function getFinalDate(date, holidaySet) {
   let resultDate = new Date(date);
-  let dayOfWeek = resultDate.getDay();
+  let weekday = resultDate.getDay();
 
-  // 1. 處理週末初步調整
-  // 逢週六(6) -> 訂週五(-1)；逢週日(0) -> 訂週一(+1)
-  if (dayOfWeek === 6) {
+  // 1. 週末初步調整：週六往前推1天，週日往後推1天
+  if (weekday === 6) { // 週六
     resultDate.setDate(resultDate.getDate() - 1);
-  } else if (dayOfWeek === 0) {
+  } else if (weekday === 0) { // 週日
     resultDate.setDate(resultDate.getDate() + 1);
   }
 
-  // 2. 處理國定假日（若調整後仍是假日，則一律提前）
-  let i = 0;
-  // 只要 checkDayType 回傳不是 "工作日"，就一直往前減一天
-  while (checkDayType(resultDate) !== "工作日" && i < 10) {
+  // 2. 檢查是否遇到國定假日 (若調整後是假日，則持續提前)
+  let loopGuard = 0;
+  // 只要是「非工作日」(即假日或週末)，就往前推一天
+  while (!isWorkDay(resultDate, holidaySet) && loopGuard < 10) {
     resultDate.setDate(resultDate.getDate() - 1);
-    i++; // 防止無限迴圈的安全機制
+    loopGuard++;
   }
 
   return resultDate;
 }
 
 /**
- * 檢查日期類型
+ * 檢查是否為工作日 (Boolean)
+ * true: 是工作日
+ * false: 是假日或週末
  */
-function checkDayType(checkDate) {
-  const dayOfWeek = checkDate.getDay(); 
-  const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
-  const targetDateStr = Utilities.formatDate(checkDate, "GMT+8", "yyyy-MM-dd");
+function isWorkDay(checkDate, holidaySet) {
+  const weekday = checkDate.getDay();
+  const isWeekend = (weekday === 0 || weekday === 6);
+  const dateStr = Utilities.formatDate(checkDate, "GMT+8", "yyyy-MM-dd");
 
-  const isHoliday = twHolidays.some(event => {
-    const hDateStr = Utilities.formatDate(event.getStartTime(), "GMT+8", "yyyy-MM-dd");
-    return hDateStr === targetDateStr;
-  });
-
-  if (isHoliday) return "國定假日";
-  if (isWeekend) return "普通週末";
-  return "工作日";
+  // 如果是國定假日 OR 是週末，就代表「不是工作日」
+  if (holidaySet.has(dateStr) || isWeekend) {
+    return false;
+  }
+  return true;
 }
 
 /**
- * 主程式：根據 baseDate 自動產生開會日期並垂直寫入 E2:E9
+ * 主程式：根據 baseDate 自動產生開會日期並垂直寫入 E2
  */
 function generateDate() {
-  // 確保 baseDate 是日期物件
-  const baseDateObj = new Date(baseDate); 
-  
+  // 1. 先抓取一次假日資料 (轉為 Set)
+  const holidaySet = getTwNationalHolidays();
+
   const intervals = [7, 30, 49, 56, 90, 150, 180, 365];
-  
+
   // 3. 跑迴圈計算每一個日期，並直接包成 [[date1], [date2]] 的格式
   const results = intervals.map(days => {
-    let targetDate = new Date(baseDateObj);
+    let targetDate = new Date(baseDate);
     targetDate.setDate(targetDate.getDate() + days);
-    
-    let finalDate = getFinalMeetingDate(targetDate);
-    // 回傳 [日期] 這樣最終會變成二維陣列
-    return [finalDate]; 
+
+    // 將 holidaySet 傳入以供查詢
+    let finalDate = getFinalDate(targetDate, holidaySet);
+    return [finalDate];
   });
 
-  // 4. 將結果垂直寫入 E2 開始的儲存格
-  // E 是第 5 欄，起始列為 2，列數為 results.length，欄數為 1
+  // 3. 輸出結果到 E 欄 (從第 2 列開始)
   sheet.getRange(2, 5, results.length, 1).setValues(results);
 }
