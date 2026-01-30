@@ -19,5 +19,5 @@ function deleteCalendar() {
         }
     });
 
-    SpreadsheetApp.getUi().toast("行事曆同步完成！");
+    SpreadsheetApp.getActiveSpreadsheet().toast("行事曆刪除完成！");
 }
