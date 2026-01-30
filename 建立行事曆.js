@@ -19,24 +19,12 @@ function createCalendar() {
 
         // 3. 定義邏輯：根據標題關鍵字決定參與者
         let attendees = [people.employee]; // 員工必過
-        if (title.includes("Relay")) {
-            attendees.push(people.manager);
-        }
-        if (title.includes("回饋")) {
-            attendees.push(people.mentor);
-        }
-
-        // 如果已經有 ID，先刪除舊的事件
-        if (eventId) {
-            try {
-                const existingEvent = calendar.getEventById(eventId);
-                if (existingEvent) {
-                    existingEvent.deleteEvent();
-                }
-            } catch (e) {
-                console.log(`刪除舊事件失敗 (可能已不存在): ` + e.toString());
-            }
-        }
+        // if (title.includes("Relay")) {
+        //     attendees.push(people.manager);
+        // }
+        // if (title.includes("回饋")) {
+        //     attendees.push(people.mentor);
+        // }
 
         try {
             // 4. (重新)建立日曆事件    
@@ -63,5 +51,5 @@ function createCalendar() {
         }
     });
 
-    SpreadsheetApp.getUi().alert("行事曆同步完成！");
+    SpreadsheetApp.getUi().alert("行事曆建立完成！");
 }
