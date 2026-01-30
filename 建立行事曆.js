@@ -43,8 +43,8 @@ function createCalendar() {
                 description: "（自動生成）入職重要時程"
             });
 
-            // 將 Event ID 寫回試算表 F 欄 (index + 3 是因為資料從第三列開始)
-            sheet.getRange(index + 3, 6).setValue(event.getId());
+            // 將 Event ID 寫回試算表 F 欄 (index + 2 是因為資料從第二列開始)
+            sheet.getRange(index + 2, 6).setValue(event.getId());
 
         } catch (e) {
             console.log(`建立事件失敗 (${title}): ` + e.toString());
