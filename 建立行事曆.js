@@ -1,33 +1,55 @@
 
 function createCalendar() {
     // 1. 取得基本資料
-    const ss = SpreadsheetApp.getActiveSpreadsheet();   
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
     const sheet = ss.getActiveSheet();
-    const employee = sheet.getRange("B4").getValue();
-    const manager = sheet.getRange("B8").getValue();
-    const mentor = sheet.getRange("B10").getValue();
+    const people = {
+        employee: sheet.getRange("B4").getValue(),
+        manager: sheet.getRange("B8").getValue(),
+        mentor: sheet.getRange("B10").getValue()
+    };
 
-    const scheduelData = sheet.getRange("D3:E11").getValues();
-    scheduelData.forEach(row => {
+    const scheduelData = sheet.getRange("D3:F11").getValues();
+    const calendar = CalendarApp.getDefaultCalendar();
+
+    scheduelData.forEach((row, index) => {
         const title = row[0];
         const date = row[1];
-    })
-    
-    try {
-        // 2. 建立日曆
-        const calendar = CalendarApp.getDefaultCalendar();
+        const eventId = row[2];
 
-        const event = (title, date, attendees) => {
-            calendar.createAllDayEvent(title, date, {
+        // 3. 定義邏輯：根據標題關鍵字決定參與者
+        let attendees = [people.employee]; // 員工必過
+        if (title.includes("Relay")) {
+            attendees.push(people.manager);
+        }
+        if (title.includes("回饋")) {
+            attendees.push(people.mentor);
+        }
+
+        try {
+            // 4. 建立日曆事件
+            const eventTitle = `${people.employee} ／ ${title}`;
+
+            // 設定時間為 15:00 ~ 15:30
+            const startTime = new Date(date);
+            startTime.setHours(15, 0, 0);
+
+            const endTime = new Date(date);
+            endTime.setHours(15, 30, 0);
+
+            const event = calendar.createEvent(eventTitle, startTime, endTime, {
                 guests: attendees.join(", "),
                 sendInvites: true,
                 description: "（自動生成）入職重要時程"
             });
-        }
 
-        // 3. 根據規則建立獨立事件
-        event(`${employee} title`, baseDate, [employee, manager, mentor]);
-    } catch (e) {
-        SpreadsheetApp.getUi().alert("建立失敗: " + e.toString()); // 顯示錯誤給使用者
-    }
+            // 將 Event ID 寫回試算表 F 欄 (index + 3 是因為資料從第三列開始)
+            sheet.getRange(index + 3, 6).setValue(event.getId());
+
+        } catch (e) {
+            console.log(`建立事件失敗 (${title}): ` + e.toString());
+        }
+    });
+
+    SpreadsheetApp.getUi().alert("行事曆同步完成！");
 }
