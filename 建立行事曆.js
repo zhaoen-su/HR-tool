@@ -9,7 +9,7 @@ function createCalendar() {
         mentor: sheet.getRange("B10").getValue()
     };
 
-    const scheduelData = sheet.getRange("D3:F11").getValues();
+    const scheduelData = sheet.getRange("D3:F10").getValues();
     const calendar = CalendarApp.getDefaultCalendar();
 
     scheduelData.forEach((row, index) => {
