@@ -26,8 +26,20 @@ function createCalendar() {
             attendees.push(people.mentor);
         }
 
+        // 如果已經有 ID，先刪除舊的事件
+        if (eventId) {
+            try {
+                const existingEvent = calendar.getEventById(eventId);
+                if (existingEvent) {
+                    existingEvent.deleteEvent();
+                }
+            } catch (e) {
+                console.log(`刪除舊事件失敗 (可能已不存在): ` + e.toString());
+            }
+        }
+
         try {
-            // 4. 建立日曆事件
+            // 4. (重新)建立日曆事件    
             const eventTitle = `${people.employee} ／ ${title}`;
 
             // 設定時間為 15:00 ~ 15:30
@@ -43,7 +55,7 @@ function createCalendar() {
                 description: "（自動生成）入職重要時程"
             });
 
-            // 將 Event ID 寫回試算表 F 欄 (index + 2 是因為資料從第二列開始)
+            // 將新的 Event ID 寫回試算表 F 欄
             sheet.getRange(index + 2, 6).setValue(event.getId());
 
         } catch (e) {
