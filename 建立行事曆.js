@@ -50,6 +50,4 @@ function createCalendar() {
             console.log(`建立事件失敗 (${title}): ` + e.toString());
         }
     });
-
-    SpreadsheetApp.getUi().alert("行事曆建立完成！");
 }
