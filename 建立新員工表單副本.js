@@ -1,10 +1,10 @@
 function createNewSpreadsheet() {
     const TEMPLATE_ID = "1-I3pxesO-aXYxTjzXOSXVoaeINE36RfNjzOr7MKYzyc";
     const TARGET_FOLDER_ID = "1yEf9uy3K0_7BBEOWdpBOZAr80Kz7R3gx";
-    
+
     try {
         // 2. 準備新檔名
-        const ss = SpreadsheetApp.getActiveSpreadsheet();   
+        const ss = SpreadsheetApp.getActiveSpreadsheet();
         const sheet = ss.getActiveSheet();
         const employeeName = sheet.getRange("B2").getValue();
         const startDate = Utilities.formatDate(sheet.getRange("B6").getValue(), "GMT+8", "yyyy-MM-dd");
@@ -20,15 +20,13 @@ function createNewSpreadsheet() {
         const allSheets = newSS.getSheets();
         const keepSheetName = "資料";
 
-        allSheets.forEach(s => {
-            if (s.getName() !== keepSheetName) {
-                // 如果分頁名稱不是要保留的，就刪除
-                // 注意：試算表至少必須保留一個分頁，否則會報錯
-                if (newSS.getSheets().length > 1) {
-                    newSS.deleteSheet(s);
-                }
-            }
-        });
+        // 先找出要刪除的分頁（避免在迴圈中直接刪除造成問題）
+        const sheetsToDelete = allSheets.filter(s => s.getName() !== keepSheetName);
+
+        // 確保至少保留一個分頁
+        if (sheetsToDelete.length < allSheets.length) {
+            sheetsToDelete.forEach(s => newSS.deleteSheet(s));
+        }
         // 4. 放到特定資料夾
         const folder = DriveApp.getFolderById(TARGET_FOLDER_ID);
         newFile.moveTo(folder);
@@ -46,8 +44,8 @@ function createNewSpreadsheet() {
                 <p style="color: gray; font-size: 12px;">點擊按鈕將於新分頁開啟</p>
             </div>`
         )
-        .setWidth(350)
-        .setHeight(220);
+            .setWidth(350)
+            .setHeight(220);
 
         // 彈出視窗
         SpreadsheetApp.getUi().showModalDialog(htmlOutput, "系統訊息");
