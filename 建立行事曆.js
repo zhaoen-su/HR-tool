@@ -51,3 +51,8 @@ function createCalendar() {
         }
     });
 }
+
+// 供本地測試環境使用
+if (typeof module !== 'undefined') {
+    module.exports = { createCalendar };
+}

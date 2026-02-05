@@ -12,3 +12,4 @@ package-lock.json
 clasp_setup_guide.md
 .gitignore
 vitest.config.js
+setup.js
