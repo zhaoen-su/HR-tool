@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "刪除行事曆.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "repository": {
     "type": "git",

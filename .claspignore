@@ -11,3 +11,4 @@ package-lock.json
 .vscode/**
 clasp_setup_guide.md
 .gitignore
+vitest.config.js
