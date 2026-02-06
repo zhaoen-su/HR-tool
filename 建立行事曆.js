@@ -31,7 +31,7 @@ function createCalendar() {
             // 4. (重新)建立日曆事件    
             const eventTitle = `${people.employeeName} ／ ${title}`;
 
-            const event = calendar.createAllDayEvent(title, date, {
+            const event = calendar.createAllDayEvent(eventTitle, date, {
                 guests: attendees.join(", "),
                 sendInvites: false,
                 description: "（自動生成）入職重要時程"
