@@ -38,7 +38,7 @@ function createCalendar() {
             });
 
             // 將新的 Event ID 寫回試算表 F 欄
-            sheet.getRange(index + 2, 6).setValue(event.getId());
+            // sheet.getRange(index + 2, 6).setValue(event.getId());
             ss.getSheetByName("行事曆控制表").appendRow([people.employeeName, title, date, event.getId()]);
 
         } catch (e) {
