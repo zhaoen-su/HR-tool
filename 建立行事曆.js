@@ -4,7 +4,8 @@ function createCalendar() {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const sheet = ss.getActiveSheet();
     const people = {
-        employee: sheet.getRange("B4").getValue(),
+        employeeName: sheet.getRange("B2").getValue(),
+        employeeEmail: sheet.getRange("B4").getValue(),
         manager: sheet.getRange("B8").getValue(),
         mentor: sheet.getRange("B10").getValue()
     };
@@ -18,7 +19,7 @@ function createCalendar() {
         const eventId = row[2];
 
         // 3. 定義邏輯：根據標題關鍵字決定參與者
-        let attendees = [people.employee]; // 員工必過
+        let attendees = [people.employeeEmail]; // 員工必過
         // if (title.includes("Relay")) {
         //     attendees.push(people.manager);
         // }
@@ -28,23 +29,17 @@ function createCalendar() {
 
         try {
             // 4. (重新)建立日曆事件    
-            const eventTitle = `${people.employee} ／ ${title}`;
+            const eventTitle = `${people.employeeName} ／ ${title}`;
 
-            // 設定時間為 15:00 ~ 15:30
-            const startTime = new Date(date);
-            startTime.setHours(15, 0, 0);
-
-            const endTime = new Date(date);
-            endTime.setHours(15, 30, 0);
-
-            const event = calendar.createEvent(eventTitle, startTime, endTime, {
+            const event = calendar.createAllDayEvent(title, date, {
                 guests: attendees.join(", "),
-                sendInvites: true,
+                sendInvites: false,
                 description: "（自動生成）入職重要時程"
             });
 
             // 將新的 Event ID 寫回試算表 F 欄
             sheet.getRange(index + 2, 6).setValue(event.getId());
+            ss.getSheetByName("行事曆控制表").appendRow([people.employeeName, title, date, event.getId()]);
 
         } catch (e) {
             console.log(`建立事件失敗 (${title}): ` + e.toString());
