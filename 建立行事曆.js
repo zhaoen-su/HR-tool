@@ -2,7 +2,7 @@
 function createCalendar() {
     // 1. 取得基本資料
     const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = ss.getActiveSheet();
+    const sheet = ss.getSheetByName("資料輸入區");
     const people = {
         employeeName: sheet.getRange("B2").getValue(),
         employeeEmail: sheet.getRange("B4").getValue(),
@@ -38,7 +38,7 @@ function createCalendar() {
             });
 
             // 將新的 Event ID 寫回試算表 F 欄
-            sheet.getRange(index + 2, 6).setValue(event.getId());
+            // sheet.getRange(index + 2, 6).setValue(event.getId());
             ss.getSheetByName("行事曆控制表").appendRow([people.employeeName, title, date, event.getId()]);
 
         } catch (e) {
