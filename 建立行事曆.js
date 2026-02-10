@@ -2,34 +2,47 @@
 function createCalendar() {
     // 1. 取得基本資料
     const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = ss.getSheetByName("資料輸入區");
+    const sheet = ss.getSheetByName("各項時程");
     const people = {
-        employeeName: sheet.getRange("B2").getValue(),
-        employeeEmail: sheet.getRange("B4").getValue(),
-        manager: sheet.getRange("B8").getValue(),
-        mentor: sheet.getRange("B10").getValue()
+        employeeName: sheet.getRange("B1").getValue(),
+        employeeEmail: sheet.getRange("C1").getValue(),
+        managerName: sheet.getRange("B15").getValue(),
+        managerEmail: sheet.getRange("C15").getValue(),
+        mentorName: sheet.getRange("B16").getValue(),
+        mentorEmail: sheet.getRange("C16").getValue(),
+        hrName: sheet.getRange("B17").getValue(),
+        hrEmail: sheet.getRange("C17").getValue()
     };
 
-    const scheduelData = sheet.getRange("D3:F10").getValues();
+    const scheduelData = sheet.getRange("A3:D12").getValues();
     const calendar = CalendarApp.getDefaultCalendar();
 
     scheduelData.forEach((row, index) => {
         const title = row[0];
-        const date = row[1];
-        const eventId = row[2];
+        const date = row[2];
+        const personInCharge = row[3];
 
-        // 3. 定義邏輯：根據標題關鍵字決定參與者
+        // 3. 定義邏輯：根據標題關鍵字決定參與者與對象姓名
         let attendees = [people.employeeEmail]; // 員工必過
-        // if (title.includes("Relay")) {
-        //     attendees.push(people.manager);
-        // }
-        // if (title.includes("回饋")) {
-        //     attendees.push(people.mentor);
-        // }
+        let targetName = "";
+
+        if (title.includes("主管")) {
+            attendees.push(people.managerEmail);
+            targetName = people.managerName;
+        } else if (title.includes("Mentor")) {
+            attendees.push(people.mentorEmail);
+            targetName = people.mentorName;
+        } else if (title.includes("HR")) {
+            attendees.push(people.hrEmail);
+            targetName = people.hrName;
+        }
 
         try {
             // 4. (重新)建立日曆事件    
-            const eventTitle = `${people.employeeName} ／ ${title}`;
+            // 如果有特定對象 (targetName)，就加入標題
+            const eventTitle = targetName
+                ? `${people.employeeName}／${targetName}　${title}`
+                : `${people.employeeName}　${title}`;
 
             const event = calendar.createAllDayEvent(eventTitle, date, {
                 guests: attendees.join(", "),
@@ -39,7 +52,7 @@ function createCalendar() {
 
             // 將新的 Event ID 寫回試算表 F 欄
             // sheet.getRange(index + 2, 6).setValue(event.getId());
-            ss.getSheetByName("行事曆控制表").appendRow([people.employeeName, title, date, event.getId()]);
+            ss.getSheetByName("行事曆紀錄").appendRow([people.employeeName, title, date, event.getId()]);
 
         } catch (e) {
             console.log(`建立事件失敗 (${title}): ` + e.toString());
