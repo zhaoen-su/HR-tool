@@ -1,7 +1,7 @@
 function deleteCalendar() {
   const ui = SpreadsheetApp.getUi();
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sheet = ss.getSheetByName("行事曆控制表");
+  const sheet = ss.getSheetByName("行事曆紀錄");
   const activeRange = sheet.getActiveRange();
   const startRow = activeRange.getRow();
   const numRows = activeRange.getNumRows();
