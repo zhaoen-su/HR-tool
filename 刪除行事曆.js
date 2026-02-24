@@ -6,7 +6,7 @@ function deleteCalendar() {
   const startRow = activeRange.getRow();
   const numRows = activeRange.getNumRows();
   const eventIds = activeRange.getValues();
-  const calendar = CalendarApp.getDefaultCalendar();
+  const calendar = CalendarApp.getCalendarById("capsulecorporation.cc_b4fsbnukr1r08evseau268f7qo@group.calendar.google.com");
 
   // --- 防呆提示框 ---
   const response = ui.alert(

@@ -15,7 +15,7 @@ function createCalendar() {
     };
 
     const scheduelData = sheet.getRange("A3:D12").getValues();
-    const calendar = CalendarApp.getDefaultCalendar();
+    const calendar = CalendarApp.getCalendarById("capsulecorporation.cc_b4fsbnukr1r08evseau268f7qo@group.calendar.google.com");
 
     scheduelData.forEach((row, index) => {
         const title = row[0];

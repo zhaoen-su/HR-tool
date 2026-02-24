@@ -39,7 +39,7 @@ function syncDateToCalendar(e) {
       return;
     }
 
-    const calendar = CalendarApp.getDefaultCalendar();
+    const calendar = CalendarApp.getCalendarById("capsulecorporation.cc_b4fsbnukr1r08evseau268f7qo@group.calendar.google.com");
     const event = calendar.getEventById(eventId.toString());
 
     if (event) {
