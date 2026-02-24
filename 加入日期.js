@@ -1,6 +1,6 @@
 // 設定常用變數
 const ss = SpreadsheetApp.getActiveSpreadsheet();
-const sheet = ss.getActiveSheet();
+const sheet = ss.getSheetByName("各項時程");
 const baseDate = sheet.getRange("C3").getValue();
 
 /**
@@ -8,7 +8,7 @@ const baseDate = sheet.getRange("C3").getValue();
  */
 function getTwNationalHolidays() {
   const calendar = CalendarApp.getCalendarById("zh-tw.taiwan#holiday@group.v.calendar.google.com");
-  const startTime = new Date();
+  const startTime = new Date(baseDate);
   const endTime = new Date();
   endTime.setFullYear(startTime.getFullYear() + 2);
 
