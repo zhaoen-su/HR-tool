@@ -5,7 +5,7 @@ function createNewSpreadsheet() {
     try {
         // 2. 準備新檔名
         const ss = SpreadsheetApp.getActiveSpreadsheet();
-        const sheet = ss.getActiveSheet();
+        const sheet = ss.getSheetByName("各項時程");
         const employeeChName = sheet.getRange("B1").getValue();
         const employeeEnName = sheet.getRange("D1").getValue();
         const startDate = Utilities.formatDate(sheet.getRange("C3").getValue(), "GMT+8", "yyyy-MM-dd");
