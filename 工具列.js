@@ -8,8 +8,5 @@ function onOpen() {
     .addItem('刪除行事曆','deleteCalendar')
     .addSeparator()
     .addItem('建立新員工表單副本', 'createNewSpreadsheet')
-    .addItem('匯出中文紀錄表', 'exportToChineseRecord')
-    .addItem('匯出日文紀錄表', 'exportToEnglishRecord')
-    .addItem('匯出韓文紀錄表', 'exportToKoreanRecord')
     .addToUi();
 }
