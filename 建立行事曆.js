@@ -23,7 +23,7 @@ function createCalendar() {
         const personInCharge = row[3];
 
         // 3. 定義邏輯：根據標題關鍵字決定參與者與對象姓名
-        let attendees = [people.employeeEmail]; // 員工必過
+        let attendees = [];
         let targetName = "";
 
         if (title.includes("主管")) {
