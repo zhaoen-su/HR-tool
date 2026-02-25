@@ -22,17 +22,21 @@ function createNewSpreadsheet() {
         const sheetsToDeleteList = ["索引", "行事曆紀錄"];
         const allSheetsList = newSS.getSheets();
 
-        allSheetsList.forEach(sheet => {
-            if (sheetsToDeleteList.includes(sheet.getName())) {
+        // 從原始試算表讀取正確的值，寫入副本（避免副本公式未計算的問題）
+        allSheetsList.forEach(newSheet => {
+            const sheetName = newSheet.getName();
+            if (sheetsToDeleteList.includes(sheetName)) {
                 try {
-                    newSS.deleteSheet(sheet);
+                    newSS.deleteSheet(newSheet);
                 } catch (e) {
-                    console.log("無法刪除分頁: " + sheet.getName());
+                    console.log("無法刪除分頁: " + sheetName);
                 }
             } else {
-                const range = sheet.getDataRange();
-                const values = range.getValues();
-                range.setValues(values);
+                const originalSheet = ss.getSheetByName(sheetName);
+                if (originalSheet) {
+                    const values = originalSheet.getDataRange().getValues();
+                    newSheet.getRange(1, 1, values.length, values[0].length).setValues(values);
+                }
             }
         });
         // 4. 放到特定資料夾
