@@ -8,7 +8,7 @@ function createNewSpreadsheet() {
         const sheet = ss.getSheetByName("各項時程");
         const employeeChName = sheet.getRange("B1").getValue();
         const employeeEnName = sheet.getRange("D1").getValue();
-        const startDate = Utilities.formatDate(sheet.getRange("C3").getValue(), "GMT+8", "yyyy-MM-dd");
+        const startDate = Utilities.formatDate(new Date(sheet.getRange("C3").getValue()), "GMT+8", "yyyy-MM-dd");
         const newFileName = `${startDate}_${employeeChName} ${employeeEnName}_新人歷程檔案（閱覽權限GL以上主管+HR）`;
 
         // 3. 取得範本檔案並建立副本
