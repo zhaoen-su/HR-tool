@@ -1,5 +1,5 @@
 function createNewSpreadsheet() {
-    const TEMPLATE_ID = "1wuXFmv1sEi2nea6-zrah_AjRiwsp3eTQ-6wwbZDqYmo";
+    const TEMPLATE_ID = "1jFGvn3pwHSz8Lh02HhkPe127uPNjLiy4kvOm__J-Elo";
     const TARGET_FOLDER_ID = "1yEf9uy3K0_7BBEOWdpBOZAr80Kz7R3gx";
 
     try {
