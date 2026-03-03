@@ -1,6 +1,6 @@
 function createNewSpreadsheet() {
     const TEMPLATE_ID = "1jFGvn3pwHSz8Lh02HhkPe127uPNjLiy4kvOm__J-Elo";
-    const TARGET_FOLDER_ID = "1yEf9uy3K0_7BBEOWdpBOZAr80Kz7R3gx";
+    const TARGET_FOLDER_ID = "1JJtU7oX3mvwuCn7-lEBPz0VCz1qPyE1P";
 
     try {
         // 2. 準備新檔名
