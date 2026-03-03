@@ -22,20 +22,25 @@ function createNewSpreadsheet() {
         const sheetsToDeleteList = ["索引", "行事曆紀錄"];
         const allSheetsList = newSS.getSheets();
 
-        // 從原始試算表讀取正確的值，寫入副本（避免副本公式未計算的問題）
+        // 先用純值覆蓋所有分頁（避免公式參照到即將刪除的分頁）
         allSheetsList.forEach(newSheet => {
             const sheetName = newSheet.getName();
-            if (sheetsToDeleteList.includes(sheetName)) {
-                try {
-                    newSS.deleteSheet(newSheet);
-                } catch (e) {
-                    console.log("無法刪除分頁: " + sheetName);
-                }
-            } else {
+            if (!sheetsToDeleteList.includes(sheetName)) {
                 const originalSheet = ss.getSheetByName(sheetName);
                 if (originalSheet) {
                     const values = originalSheet.getDataRange().getValues();
                     newSheet.getRange(1, 1, values.length, values[0].length).setValues(values);
+                }
+            }
+        });
+
+        // 公式已清除，安全刪除不需要的分頁
+        allSheetsList.forEach(newSheet => {
+            if (sheetsToDeleteList.includes(newSheet.getName())) {
+                try {
+                    newSS.deleteSheet(newSheet);
+                } catch (e) {
+                    console.log("無法刪除分頁: " + newSheet.getName());
                 }
             }
         });
